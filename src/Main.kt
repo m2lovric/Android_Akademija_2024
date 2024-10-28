@@ -1,3 +1,4 @@
+import kotlin.math.pow
+
 fun main() {
-    println("Hello World!")
 }
