@@ -72,13 +72,13 @@ class Card(var color: CardColor, var value: CardValue) {
 }
 
 class Deck {
-    var deck = arrayOfNulls<Card>(52)
-    var count = 0
+    private var deck = arrayOfNulls<Card>(52)
+    private var count = 0
     init {
         var count = 0
         CardColor.entries.forEach{color ->
             CardValue.entries.forEach{value ->
-                deck.set(count, Card(color, value))
+                deck[count] = Card(color, value)
                 count++
             }
         }
