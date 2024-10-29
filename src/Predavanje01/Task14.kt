@@ -34,6 +34,14 @@ fun playGame() {
         readln()
         println()
     }
+
+    if (Player.points > Computer.points) {
+        println("Player wins")
+    } else if (Player.points < Computer.points){
+        println("Computer wins")
+    } else {
+        println("Draw")
+    }
 }
 
 enum class CardColor(var color: String) {
