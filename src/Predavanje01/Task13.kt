@@ -3,25 +3,30 @@ package Predavanje01
 import kotlin.random.Random
 
 fun main() {
-    println("Game start")
     val hand = DiceHand()
     println("Start game ? y/n ")
-    val startGame = if (readln().toCharArray()[0].lowercaseChar() == 'y') true else false
+    val input = readln().toCharArray()
+    val startGame = input[0].lowercaseChar() == 'y' && input.size == 1
+
     if(startGame) {
+        println("Game start")
         hand.rollDice()
         hand.printValues()
-    }
-    repeat(2){
-        println("Would you like to lock some dice ? y/n ")
-        val decision = readln().toCharArray()[0].lowercaseChar()
-        if(decision == 'y') {
-            hand.lockDice()
-        }
+        repeat(2){
+            println("Would you like to lock some dice ? y/n ")
+            val decision = readln().toCharArray()[0].lowercaseChar()
+            if(decision == 'y') {
+                hand.lockDice()
+            }
 
-        hand.rollUnlocked()
-        hand.printValues()
+            hand.rollDice()
+            hand.printValues()
+        }
+        println(hand.evaluateHand(hand.diceList))
+    } else {
+        println("GAME OVER")
     }
-    println(hand.evaluateHand(hand.diceList))
+
 }
 
 const val RESET = "\u001B[0m"
@@ -32,40 +37,49 @@ class Dice(var current: Int = 1) {
     var locked: Boolean = false
     fun roll() {
         val rand = (1..6).random()
-        current = rand
+        if (locked) {
+            current
+        } else {
+            current = rand
+        }
     }
 }
 
 class DiceHand {
-    val dice1 = Dice()
-    val dice2 = Dice()
-    val dice3 = Dice()
-    val dice4 = Dice()
-    val dice5 = Dice()
-    val dice6 = Dice()
 
-    var diceList: List<Dice> = listOf(dice1, dice2, dice3, dice4, dice5, dice6)
+    val diceList: List<Dice> = listOf(Dice(),Dice(),Dice(),Dice(),Dice(),Dice())
 
     fun rollDice() {
         diceList.forEach{ dice -> dice.roll() }
     }
 
-    fun rollUnlocked() {
-        diceList.forEach { dice -> if (!dice.locked) dice.roll() }
-    }
+//    fun rollUnlocked() {
+//        diceList.forEach { dice -> if (!dice.locked) dice.roll() }
+//    }
 
     fun lockDice() {
-        diceList.forEachIndexed{
-            index, dice ->
-            if(!dice.locked){
-                println("Lock dice ${index + 1} y/n: ")
-                val lock : Boolean = when (readln().toCharArray()[0].lowercaseChar()) {
-                    'y' -> {true}
-                    else -> {false}
+        println("Lock dice? (e.g. 1, 2, 4)")
+        val input = readln()
+        val locked = input.split(", ")
+        diceList.forEachIndexed{index, dice ->
+            locked.forEach{
+                if(index + 1 == it.toInt()) {
+                    dice.locked = true
                 }
-                dice.locked = lock
             }
         }
+//        diceList.forEachIndexed{
+//            index, dice ->
+//            if(!dice.locked){
+//                println("Lock dice ${index + 1} y/n: ")
+//                val lock : Boolean = when (readln().toCharArray()[0].lowercaseChar()) {
+//                    'y' -> {true}
+//                    else -> {false}
+//                }
+//                dice.locked = lock
+//            }
+//        }
+
     }
 
     fun evaluateHand(hand: List<Dice>): String {
