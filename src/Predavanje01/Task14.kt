@@ -4,54 +4,55 @@ fun main() {
     playGame()
 }
 
-object Player {
-    var points: Int = 0
-    var card: Card? = null
-}
-object Computer {
+class Player {
     var points: Int = 0
     var card: Card? = null
 }
 
 fun playGame() {
+    val player = Player()
+    val computer = Player()
     val hand = Deck()
     hand.shuffle()
     repeat(26){
-        Player.card = hand.dealCard()
-        Computer.card = hand.dealCard()
+        player.card = hand.dealCard()
+        computer.card = hand.dealCard()
 
-        print("${Player.card?.color} ${Player.card?.value}")
+        val (colorPlayer, valuePlayer) = player.card!!
+        val (colorComputer, valueComputer) = computer.card!!
+
+        print("$colorPlayer $valuePlayer ")
         print(" vs ")
-        print("${Computer.card?.color} ${Computer.card?.value}")
+        print("$colorComputer $valueComputer")
         println()
-        if(Player.card?.value?.value!! > Computer.card?.value?.value!!) {
-            Player.points++
-        } else if (Player.card?.value?.value!! < Computer.card?.value?.value!!){
-            Computer.points++
+        if(valuePlayer.value > valueComputer.value) {
+            player.points++
+        } else if (valuePlayer.value < valueComputer.value){
+            computer.points++
         }
-        println("Current score: Player - ${Player.points} : Computer - ${Computer.points}")
+        println("Current score: Player - ${player.points} : Computer - ${computer.points}")
         print("Press enter to continue")
         readln()
         println()
     }
 
-    if (Player.points > Computer.points) {
+    if (player.points > computer.points) {
         println("Player wins")
-    } else if (Player.points < Computer.points){
+    } else if (player.points < computer.points){
         println("Computer wins")
     } else {
         println("Draw")
     }
 }
 
-enum class CardColor(var color: String) {
+enum class CardColor(val color: String) {
     CLUBS("green"),
     DIAMONDS("blue"),
     HEARTS("red"),
     SPADES("black")
 }
 
-enum class CardValue(var value: Int) {
+enum class CardValue(val value: Int) {
     ACE(14),
     KING(13),
     QUEEN(12),
@@ -67,12 +68,12 @@ enum class CardValue(var value: Int) {
     TWO(2)
 }
 
-class Card(var color: CardColor, var value: CardValue) {
+data class Card(val color: CardColor, val value: CardValue) {
 
 }
 
 class Deck {
-    private var deck = arrayOfNulls<Card>(52)
+    private val deck = arrayOfNulls<Card>(52)
     private var count = 0
     init {
         var count = 0
