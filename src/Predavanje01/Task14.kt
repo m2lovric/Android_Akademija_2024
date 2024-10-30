@@ -7,6 +7,19 @@ fun main() {
 class Player {
     var points: Int = 0
     var card: Card? = null
+
+    fun compareCardTo(opponent: Player) {
+        val myCard = this.card ?: return
+        val opponentCard = opponent.card ?: return
+
+        if(myCard.value.value > opponentCard.value.value) {
+            this.points++
+        } else if(myCard.value.value == opponentCard.value.value){
+            return
+        } else {
+            opponent.points++
+        }
+    }
 }
 
 fun playGame() {
@@ -25,11 +38,12 @@ fun playGame() {
         print(" vs ")
         print("$colorComputer $valueComputer")
         println()
-        if(valuePlayer.value > valueComputer.value) {
-            player.points++
-        } else if (valuePlayer.value < valueComputer.value){
-            computer.points++
-        }
+        player.compareCardTo(computer)
+//        if(valuePlayer.value > valueComputer.value) {
+//            player.points++
+//        } else if (valuePlayer.value < valueComputer.value){
+//            computer.points++
+//        }
         println("Current score: Player - ${player.points} : Computer - ${computer.points}")
         print("Press enter to continue")
         readln()
@@ -45,11 +59,11 @@ fun playGame() {
     }
 }
 
-enum class CardColor(val color: String) {
-    CLUBS("green"),
-    DIAMONDS("blue"),
-    HEARTS("red"),
-    SPADES("black")
+enum class CardColor() {
+    CLUBS,
+    DIAMONDS,
+    HEARTS,
+    SPADES
 }
 
 enum class CardValue(val value: Int) {
