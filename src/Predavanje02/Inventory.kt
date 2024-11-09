@@ -85,9 +85,9 @@ class Inventory() {
     fun updateStock(title: String, quantity: Int, method: StockUpdate) {
         val index = inventory.indexOfFirst { it.title == title }
         if(method.equals(StockUpdate.ADD)) {
-            inventory[index].stock += quantity
+            inventory[index].addToStock(quantity)
         } else {
-            inventory[index].stock -= quantity
+            inventory[index].removeFromStock(quantity)
         }
     }
 
