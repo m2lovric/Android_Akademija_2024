@@ -1,96 +1,101 @@
 package Predavanje02
 
-import kotlin.properties.Delegates
+
 
 fun main() {
     println("Inventory management system")
     val inventory = Inventory()
     var exit = 0
-    do {
-        inventory.login("Admin")
-        println(inventory.currentUser.name)
-        println("Press number: 1. Add Employee, 2. Add Product, 3. Remove product, 4. Print all products 5. Exit")
-        when (readln().toInt()) {
-            1 -> {
-                println("Enter name")
-                val name = readln()
-                println("Enter last name")
-                val lastName = readln()
-                println("Add role: 1. Admin, 2. Manager, 3. Worker")
-                val roleValue = readln().toInt()
-                val role = Role.entries.find { it.value == roleValue }
-                inventory.currentUser.addEmployee(Employee(name, lastName, role!!))
+    println("Login name:")
+    val username = readln()
+    if (login(Employee.employees, username, inventory)) {
+        do {
+            println(inventory.currentUser.name)
+            println("Press number: 1. Add Employee, 2. Add Product, 3. Update Stock, 4. Print all products 5. Exit")
+            when (readln().toInt()) {
+                1 -> {
+                    println("Name: ")
+                    val name = readln()
+                    println("Last name: ")
+                    val lastName = readln()
+                    println("Add role: 1. Admin, 2. Manager, 3. Worker")
+                    val roleValue = readln().toInt()
+                    val role = Role.entries.find { it.value == roleValue }
+                    inventory.currentUser.addEmployee(Employee(name, lastName, role!!))
+                }
+                2 -> {
+                    println("Title: ")
+                    val title = readln()
+                    println("Category: 1. Food, 2. Tech, 3. Book")
+                    val category = readln().toInt()
+                    val productCategory = ProductCategory.entries.find { it.value == category }
+                    println("Quantity: ")
+                    val quantity = readln().toInt()
+                    inventory.addToInventory(Product(title, productCategory!!, quantity))
+                }
+                3 -> {
+                    println("Title: ")
+                    val title = readln()
+                    println("1. Increase product stock, 2. Decrease product stock")
+                    val action = readln().toInt()
+                    println("Quantity: ")
+                    val quantity = readln().toInt()
+                    when(action) {
+                        1 -> inventory.updateStock(title, quantity, StockUpdate.ADD)
+                        2 -> {
+                            inventory.updateStock(title, quantity, StockUpdate.REMOVE)
+                        }
+                    }
+
+                }
+                4 -> inventory.printAllProducts()
+                5 -> exit = 5
+                else -> {}
             }
-            2 -> {}
-            3 -> {}
-            4 -> inventory.allProducts()
-            5 -> exit = 5
-            else -> {}
-        }
-    } while (exit != 5)
-}
-
-enum class Role(var value: Int) {
-    ADMIN(1), MANAGER(2), WORKER(3)
-}
-
-enum class ProductCategory(var value: Int) {
-    FOOD(1), TECH(2), BOOK(3)
-}
-
-class Employee(val name: String, val lastName: String, val role: Role = Role.WORKER) {
-    companion object {
-        val employees = mutableListOf<Employee>(Employee("Admin", "Admin", Role.ADMIN))
+        } while (exit != 5)
     }
 
-    fun addEmployee(employee: Employee) {
-        if(this.role == Role.ADMIN) {
-            employees.add(employee)
-            println("Employee added successfully")
-            employees.forEach{ println("${it.name} ${it.role}") }
-        } else {
-            throw IllegalAccessException("You don't have permission to add employee")
-        }
+}
+
+fun login(employees: List<Employee>, name: String, inventory: Inventory) : Boolean {
+    val employee = employees.indexOfFirst { it.name == name }
+    return if(employee != -1) {
+        inventory.setUser(employees[employee])
+        true
+    } else {
+        false
     }
 }
 
 class Inventory() {
-    private val inventory = mutableListOf<Product>()
+    private val inventory = mutableListOf<Product>(Product("Orange", ProductCategory.FOOD, 12))
     lateinit var currentUser: Employee
     fun addToInventory(product: Product) {
         inventory.add(product)
     }
 
+    fun setUser(user: Employee) {
+        currentUser = user
+    }
 
-    fun login(name: String): Boolean {
-        val user = Employee.employees.find { it.name == name }
-        if(user != null){
-            currentUser = user
-            return true
+    fun getAllProducts(): MutableList<Product> {
+        return inventory
+    }
+
+    fun updateStock(title: String, quantity: Int, method: StockUpdate) {
+        val index = inventory.indexOfFirst { it.title == title }
+        if(method.equals(StockUpdate.ADD)) {
+            inventory[index].stock += quantity
         } else {
-            return false
+            inventory[index].stock -= quantity
         }
     }
 
-    fun allProducts() {
+    fun printAllProducts() {
         inventory.forEach{
-            println(it)
+            println("${it.title} ${it.category} ${it.stock}" )
         }
     }
 
-}
-
-class Product(val title: String, val category: ProductCategory, var stock: Int) {
-    var lowStockAlert by Delegates.observable(stock) {_, _, new ->
-        if(new < 5) println("LOW STOCK ALERT: Product: $title, stock: $stock")
-    }
-
-    fun addToStock(value: Int) {
-        this.stock += value
-    }
-
-    fun removeFromStock(value: Int) {
-        this.stock -= value
-    }
 }
 
