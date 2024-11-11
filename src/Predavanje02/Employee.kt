@@ -1,6 +1,6 @@
 package Predavanje02
 
-data class Employee(val name: String, val lastName: String, val role: Role = Role.WORKER) {
+open class Employee(val name: String, val lastName: String, val role: Role = Role.WORKER) {
     companion object {
         val employees = mutableListOf<Employee>(Employee("Admin", "Admin", Role.ADMIN))
     }
