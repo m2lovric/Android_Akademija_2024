@@ -102,7 +102,7 @@ class Inventory() {
         if (method.equals(StockUpdate.ADD)) {
             inventory[index].stock += quantity
         } else {
-            inventory[index].stock -= quantity
+            inventory[index].removeFromStock(quantity)
         }
     }
 
