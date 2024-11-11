@@ -1,7 +1,7 @@
 package Predavanje02
 
-enum class Role(var value: Int) {
-    ADMIN(1), MANAGER(2), WORKER(3)
+enum class Role {
+    ADMIN, MANAGER, WORKER
 }
 
 enum class StockUpdate{
