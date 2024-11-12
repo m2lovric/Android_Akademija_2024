@@ -1,6 +1,6 @@
 package Predavanje02.Classes
 
-import Predavanje02.Role
+import Predavanje02.Utils.Role
 
 open class Employee(val name: String, val lastName: String, val role: Role = Role.WORKER) {
     companion object {

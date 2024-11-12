@@ -1,6 +1,10 @@
 package Predavanje02
 
 import Predavanje02.Classes.*
+import Predavanje02.Utils.LoginHelper
+import Predavanje02.Utils.ProductCategory
+import Predavanje02.Utils.Role
+import Predavanje02.Utils.StockUpdate
 import kotlin.system.exitProcess
 
 fun main() {

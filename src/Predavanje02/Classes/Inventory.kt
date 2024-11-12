@@ -1,7 +1,7 @@
 package Predavanje02.Classes
 
-import Predavanje02.ProductCategory
-import Predavanje02.StockUpdate
+import Predavanje02.Utils.ProductCategory
+import Predavanje02.Utils.StockUpdate
 
 class Inventory() {
     private val inventory = mutableListOf<Product>(Product("Orange", ProductCategory.FOOD, 12))

@@ -1,4 +1,4 @@
-package Predavanje02
+package Predavanje02.Utils
 
 enum class Role {
     ADMIN, MANAGER, WORKER

@@ -1,6 +1,6 @@
 package Predavanje02.Classes
 
-import Predavanje02.Role
+import Predavanje02.Utils.Role
 
 class Worker(name: String, lastName: String, role: Role): Employee(name, lastName, role) {
     var finishedTasks = 0
