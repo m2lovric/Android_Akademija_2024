@@ -1,5 +1,6 @@
-package Predavanje02
+package Predavanje02.Classes
 
+import Predavanje02.ProductCategory
 import kotlin.properties.Delegates
 
 class Product(val title: String, val category: ProductCategory, stockInit: Int) {

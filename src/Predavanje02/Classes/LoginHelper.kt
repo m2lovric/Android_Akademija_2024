@@ -1,4 +1,4 @@
-package Predavanje02
+package Predavanje02.Classes
 
 class LoginHelper {
     fun performLogin(username: String, onFailure: () -> Unit, onLogin: (Employee) -> Unit) {
