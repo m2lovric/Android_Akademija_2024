@@ -35,7 +35,11 @@ fun main() {
                     input - 1
                 }
                 val role = Role.entries[roleIndex]
-                inventory.currentUser.addEmployee(Employee(name, lastName, role))
+
+                if (inventory.currentUser.role == Role.ADMIN && inventory.currentUser is Admin) {
+                    val adminUser = inventory.currentUser as Admin
+                    adminUser.addEmployee(Employee.createEmployeeByRole(name, lastName, role))
+                }
             }
 
             2 -> {
@@ -46,7 +50,8 @@ fun main() {
                 val productCategory = ProductCategory.entries.find { it.value == category }
                 println("Quantity: ")
                 val quantity = readln().toInt()
-                inventory.addToInventory(Product(title, productCategory!!, quantity))
+                if(title.isNotEmpty() && productCategory != null && quantity > 0)
+                inventory.addToInventory(Product(title, productCategory, quantity))
             }
 
             3 -> {
@@ -56,13 +61,14 @@ fun main() {
                 val action = readln().toInt()
                 println("Quantity: ")
                 val quantity = readln().toInt()
-                when (action) {
-                    1 -> inventory.updateStock(title, quantity, StockUpdate.ADD)
-                    2 -> {
-                        inventory.updateStock(title, quantity, StockUpdate.REMOVE)
+                if(title.isNotEmpty() && action in 1..2 && quantity > 0) {
+                    when (action) {
+                        1 -> inventory.updateStock(title, quantity, StockUpdate.ADD)
+                        2 -> {
+                            inventory.updateStock(title, quantity, StockUpdate.REMOVE)
+                        }
                     }
                 }
-
             }
 
             4 -> inventory.printAllProducts()
@@ -70,16 +76,6 @@ fun main() {
             else -> {}
         }
     } while (exit != 5)
-}
-
-fun login(employees: List<Employee>, name: String, inventory: Inventory): Boolean {
-    val employee = employees.indexOfFirst { it.name == name }
-    return if (employee != -1) {
-        inventory.setUser(employees[employee])
-        true
-    } else {
-        false
-    }
 }
 
 class Inventory() {
